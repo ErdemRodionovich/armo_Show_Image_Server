@@ -22,6 +22,7 @@ private:
     bool abort;
     int argc;
     char **argv;
+    CORBA::ORB_var orb;
 
 public:
     armo_Image_Server(QObject *parent = 0);
@@ -34,9 +35,6 @@ public:
 signals:
     void showImage(const QString imgSource);
     void showID(const QString id);
-
-public slots:
-    void onCallShowImage(const QString imgSource);
 
 protected:
     void run() override;

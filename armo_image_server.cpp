@@ -7,6 +7,9 @@ armo_Image_Server::armo_Image_Server(QObject *parent) : QThread(parent)
 
 armo_Image_Server::~armo_Image_Server(){
     mutex.lock();
+    if(!CORBA::is_nil(orb)){
+        orb->shutdown(true);
+    }
     abort = true;
     condition.wakeOne();
     mutex.unlock();
@@ -20,7 +23,7 @@ void armo_Image_Server::run(){
 void armo_Image_Server::runServer(){
 
     try {
-        CORBA::ORB_var          orb = CORBA::ORB_init(argc, argv);
+        orb = CORBA::ORB_init(argc, argv);
         CORBA::Object_var       obj = orb->resolve_initial_references("RootPOA");
         PortableServer::POA_var poa = PortableServer::POA::_narrow(obj);
 
@@ -32,7 +35,7 @@ void armo_Image_Server::runServer(){
         obj = myShowImage->_this();
         CORBA::String_var sior(orb->object_to_string(obj));
         emit showID(QString(sior));
-        qDebug()<<sior;
+
         PortableServer::POAManager_var pman = poa->the_POAManager();
         pman->activate();
 
@@ -66,19 +69,12 @@ void armo_Image_Server::startServer(){
 
 }
 
-void armo_Image_Server::onCallShowImage(const QString imgSource){
-    emit showImage(imgSource);
-}
-
 char* Armo_Show_Image_i::showImageByString(const char *mesg){
 
     QByteArray ba = mesg;
     QJsonDocument jsdoc(QJsonDocument::fromJson(ba));
     QJsonObject js = jsdoc.object();
     QString extension = js["ext"].toString();
-    //QPixmap pm;
-    //QByteArray ba_ext = extension.toLocal8Bit();
-    //pm.loadFromData(QByteArray::fromBase64(js["data"].toString().toLatin1()), ba_ext.data());
     QString imgSource = "data:image/"+extension+";base64,"+js["data"].toString();
 
     emit armServ->showImage(imgSource);

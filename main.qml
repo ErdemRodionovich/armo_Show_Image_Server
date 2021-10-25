@@ -30,13 +30,16 @@ Window {
         selectByMouse: true
         selectByKeyboard: true
         anchors.top: captionOfServID.bottom
+
     }
 
     Image{
         id: rImage
+        fillMode: Image.PreserveAspectFit
         anchors.top: servID.bottom
         anchors.left: parent.left
         anchors.right: parent.right
+        anchors.bottom: parent.bottom
     }
 
 }
