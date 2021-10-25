@@ -18,10 +18,13 @@ public:
 
     armo_Image_Server armoServ;
 
+signals:
+    void showImage(QString imgSource);
+
 public slots:
     void onEngineCreated(QObject *obj, const QUrl &objUrl);
     void onShowID(const QString id);
-    void onShowImage(const QImage &img);
+    void onShowImage(const QString imgSource);
 
 };
 

@@ -18,10 +18,13 @@ void armo_Image_Global::onEngineCreated(QObject *obj, const QUrl &objUrl){
                      this, SLOT(onShowID(const QString)),
                      Qt::QueuedConnection);
 
-    QObject::connect(&armoServ, SIGNAL(showImage(const QImage&)),
-                     this, SLOT(onShowImage(const QImage&)),
+    QObject::connect(&armoServ, SIGNAL(showImage(const QString)),
+                     this, SLOT(onShowImage(const QString)),
                      Qt::QueuedConnection);
 
+    QObject::connect(this, SIGNAL(showImage(QString)),
+                     proot, SIGNAL(showImage(QString)),
+                     Qt::QueuedConnection);
 
     armoServ.startServer();
 
@@ -36,8 +39,8 @@ void armo_Image_Global::onShowID(const QString id){
 
 }
 
-void armo_Image_Global::onShowImage(const QImage &img){
+void armo_Image_Global::onShowImage(const QString imgSource){
 
-
+    emit showImage(imgSource);
 
 }

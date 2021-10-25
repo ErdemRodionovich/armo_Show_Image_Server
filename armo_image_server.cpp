@@ -25,9 +25,8 @@ void armo_Image_Server::runServer(){
         PortableServer::POA_var poa = PortableServer::POA::_narrow(obj);
 
         PortableServer::Servant_var<Armo_Show_Image_i> myShowImage = new Armo_Show_Image_i();
-
+        myShowImage->armServ = this;
         PortableServer::ObjectId_var myShowImageId = poa->activate_object(myShowImage);
-
         // Obtain a reference to the object, and print it out as a
         // stringified IOR.
         obj = myShowImage->_this();
@@ -46,9 +45,9 @@ void armo_Image_Server::runServer(){
       catch (CORBA::Exception& ex) {
         qDebug() << "Caught CORBA::Exception: " << ex._name() << endl;
       }
-      //catch (omni::COMM_FAILURE_LookupTable &ex){
-      //  qDebug() << "Caught CORBA::COMM_FAILURE: " << ex._name() << endl;
-      //}
+      catch (...){
+        qDebug() << "Caught unknonw expetion ";
+      }
 
 }
 
@@ -67,13 +66,23 @@ void armo_Image_Server::startServer(){
 
 }
 
+void armo_Image_Server::onCallShowImage(const QString imgSource){
+    emit showImage(imgSource);
+}
+
 char* Armo_Show_Image_i::showImageByString(const char *mesg){
 
-    //TODO show
-    //qDebug()<<"Image showed!!! "<<mesg;
-    //CORBA::String_var ans = "Success";
-    //QString str = "Success";
-    //QByteArray ba_str = str.toLocal8Bit();
-    return CORBA::string_dup(mesg);
+    QByteArray ba = mesg;
+    QJsonDocument jsdoc(QJsonDocument::fromJson(ba));
+    QJsonObject js = jsdoc.object();
+    QString extension = js["ext"].toString();
+    //QPixmap pm;
+    //QByteArray ba_ext = extension.toLocal8Bit();
+    //pm.loadFromData(QByteArray::fromBase64(js["data"].toString().toLatin1()), ba_ext.data());
+    QString imgSource = "data:image/"+extension+";base64,"+js["data"].toString();
+
+    emit armServ->showImage(imgSource);
+
+    return CORBA::string_dup("Success");
 
 }

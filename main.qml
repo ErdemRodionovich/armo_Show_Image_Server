@@ -7,6 +7,11 @@ Window {
     visible: true
     title: qsTr("Badluev Erdem for ARMO")
 
+    signal showImage(string imageSource)
+    onShowImage: {
+        rImage.source = imageSource
+    }
+
     function setServID(id_of_server){
         servID.text = id_of_server;
     }
@@ -25,6 +30,13 @@ Window {
         selectByMouse: true
         selectByKeyboard: true
         anchors.top: captionOfServID.bottom
+    }
+
+    Image{
+        id: rImage
+        anchors.top: servID.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
     }
 
 }
