@@ -7,6 +7,9 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        armoShowImageSK.cc \
+        armo_image_global.cpp \
+        armo_image_server.cpp \
         main.cpp
 
 RESOURCES += qml.qrc
@@ -21,3 +24,16 @@ QML_DESIGNER_IMPORT_PATH =
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    armoShowImage.idl
+
+HEADERS += \
+    armoShowImage.hh \
+    armo_image_global.h \
+    armo_image_server.h
+INCLUDEPATH += "e:\Soft\omniORB\omniORB-vs-15-4.2.4\include"
+INCLUDEPATH += "c:\Users\Z\.nuget\packages\pthreads\2.9.1.4\build\native\include"
+LIBS += "e:\Soft\omniORB\omniORB-vs-15-4.2.4\lib\x86_win32\omniORB424_rtd.lib"
+LIBS += "e:\Soft\omniORB\omniORB-vs-15-4.2.4\lib\x86_win32\omnithread41_rtd.lib"
+LIBS += "e:\Soft\omniORB\omniORB-vs-15-4.2.4\lib\x86_win32\omniDynamic424_rtd.lib"

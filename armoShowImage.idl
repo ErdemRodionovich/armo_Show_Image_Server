@@ -1,0 +1,3 @@
+interface armoShowImage {
+  string showImageByString(in string mesg);
+};
